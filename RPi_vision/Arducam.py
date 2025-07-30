@@ -1,8 +1,10 @@
 from cscore import CameraServer
 import cv2
 import numpy as np
+
 CameraServer.enableLogging()
 camera = CameraServer.startAutomaticCapture()
+width, height = 160, 120
 camera.setResolution(width, height)
 sink = cs.getVideo()
 while True:
