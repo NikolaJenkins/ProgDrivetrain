@@ -1,11 +1,13 @@
 from cscore import CameraServer
-import ntcore
+from networktables import NetworkTables as nt
 
-ntInstance = ntcore.NetworkTableInstance.getDefault()
-ntInstance.setServerTeam(3636)
+nt.initialize(server = 'roborio-3636-frc.local')
+table = nt.getTable('data table')
+x = table.getDoubleTopic('x').subscribe(0.0)
 
 camera = CameraServer.startAutomaticCapture()
 CameraServer.enableLogging()
 
 while True:
-    pass
+    x += 1
+    table.set(x)
