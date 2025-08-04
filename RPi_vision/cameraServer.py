@@ -1,5 +1,5 @@
 from cscore import CameraServer
-from networktables import NetworkTables as nt
+import networktables as nt
 import time
 
 nt.NetworkTables.initialize(server = 'roborio-3636-frc.local')
