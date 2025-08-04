@@ -3,26 +3,26 @@ import ntcore
 import numpy
 import cv2
 
-# start up NetworkTables as a server
-ntInstance = ntcore.NetworkTableInstance.getDefault()
-ntInstance.startServer()
-
 # camera settings
 xResolution = 640
 yResolution = 480
 frameRate = 30
 
+# start up NetworkTables as a server
+ntInstance = ntcore.NetworkTableInstance.getDefault()
+ntInstance.startServer()
+
 # Start USB camera capture via CameraServer
 camera = CameraServer.startAutomaticCapture()
+
+# Enable logging so we see some output to the terminal
+CameraServer.enableLogging()
 
 # set resolution and framerate
 camera.setResolution(xResolution, yResolution)
 camera.setFPS(frameRate)
 
 cvSink = CameraServer.getVideo()
-
-# Enable logging so we see some output to the terminal
-CameraServer.enableLogging()
 
 # open up an output stream to put modified video into
 outputStream = CameraServer.putVideo("Vision", xResolution, yResolution)
