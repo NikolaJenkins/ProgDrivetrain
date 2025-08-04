@@ -1,22 +1,20 @@
 from cscore import CameraServer
-from imutils.video import WebcamVideoStream
-import imutils
-from networktables import NetworkTable
-import time
-
-# nt.NetworkTables.initialize(server = 'roborio-3636-frc.local')
-# table = nt.NetworkTables.getTable('data table')
-# x = table.getDoubleTopic('x').subscribe(0.0)
-NetworkTable.setTeam(3636)
-NetworkTable.setClientMode()
-NetworkTable.initialize()
-vp = NetworkTable.getTable("Stream")
+import ntcore
 
 
+# start up NetworkTables as a server
+ntInstance = ntcore.NetworkTableInstance.getDefault()
+ntInstance.startServer()
+
+
+# Start USB camera capture via CameraServer
 camera = CameraServer.startAutomaticCapture()
+
+
+# Enable logging so we see some output to the terminal
 CameraServer.enableLogging()
 
+
+# loop forever so program doesn't stop
 while True:
-    x += 1
-    vp.putNumber('X', x)
-    time.sleep(1)
+    pass
