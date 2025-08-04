@@ -13,7 +13,7 @@ yResolution = 480
 frameRate = 30
 
 # Start USB camera capture via CameraServer
-camera = CameraServer.startAutomaticCapture("Arducam")
+camera = CameraServer.startAutomaticCapture()
 
 # set resolution and framerate
 camera.setResolution(xResolution, yResolution)
