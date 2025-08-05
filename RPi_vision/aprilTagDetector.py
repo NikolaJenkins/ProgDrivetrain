@@ -39,7 +39,7 @@ grayMat = np.zeros(shape = (xResolution, yResolution), dtype = np.uint8)
 
 while True:
     # grab rgb mat
-    time, rgbMat = cvSink.grabFrame()
+    time, rgbMat = cvSink.grabFrame(rgbMat)
 
     # convert rgb mat to grayscale
     grayMat = cv2.cvtColor(rgbMat, cv2.COLOR_RGB2GRAY) 
