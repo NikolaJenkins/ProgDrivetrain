@@ -11,9 +11,16 @@ yResolution = 480
 frameRate = 30
 lineColor = (0, 255, 0)
 
+# host - raspberry pi? roborio?
+isTableHost = False
+
 # start up NetworkTables as a server
 ntInstance = ntcore.NetworkTableInstance.getDefault()
-ntInstance.startServer()
+if isTableHost:
+    ntInstance.startServer()
+else:
+    ntInstance.setServerTeam(3636)
+    ntInstance.startClient("visionPi")
 
 # Start USB camera capture via CameraServer
 camera = CameraServer.startAutomaticCapture()
