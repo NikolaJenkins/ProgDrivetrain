@@ -20,7 +20,7 @@ if isTableHost:
     ntInstance.startServer()
 else:
     ntInstance.setServerTeam(3636)
-    ntInstance.startClient("visionPi")
+    ntInstance.startClient4("visionPi")
 
 # Start USB camera capture via CameraServer
 camera = CameraServer.startAutomaticCapture()
