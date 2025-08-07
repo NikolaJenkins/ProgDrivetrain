@@ -14,7 +14,7 @@ def main():
     height = camera['height']
 
     # set up network tables host
-    is_table_host = False
+    is_table_host = True
     nt_instance = ntcore.NetworkTableInstance.getDefault()
     if is_table_host:
         nt_instance.startServer()
