@@ -38,7 +38,7 @@ def main():
     hsv_nt.putNumber('min hue', 0.0)
     hsv_nt.putNumber('min sat', 0.0)
     hsv_nt.putNumber('min val', 0.0)
-    hsv_nt.putNumber('max val', 180.0)
+    hsv_nt.putNumber('max hue', 180.0)
     hsv_nt.putNumber('max sat', 255.0)
     hsv_nt.putNumber('max val', 255.0)
 
