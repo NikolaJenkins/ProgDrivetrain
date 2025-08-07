@@ -27,7 +27,7 @@ def main():
     img = np.zeros(shape=(240, 320, 3), dtype=np.uint8)
 
     while True:
-        time, input_image = input_stream.getFrame(img)
+        time, input_image = input_stream.grabFrame(img)
         output_stream.putFrame(output_stream)
 
 main()
