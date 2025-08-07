@@ -35,7 +35,7 @@ def main():
 
     # set min, max hsv values
     min_hue, min_sat, min_val = 0, 0, 0
-    max_hue, max_sat, max_val = 61, 255, 255
+    max_hue, max_sat, max_val = 180, 255, 255
     hsv_nt = nt_instance.getTable('HSV Values')
     hsv_nt.putNumberArray('min hsv', [min_hue, min_sat, min_val])
     hsv_nt.putNumberArray('max hsv', [max_hue, max_sat, max_val])
