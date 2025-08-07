@@ -37,10 +37,8 @@ def main():
     min_hue, min_sat, min_val = 0, 0, 0
     max_hue, max_sat, max_val = 61, 255, 255
     hsv_nt = nt_instance.getTable('HSV Values')
-    min_hsv_publisher = hsv_nt.getDoubleArrayTopic('min').publish() 
-    max_hsv_publisher = hsv_nt.getDoubleArrayTopic('max').publish()
-    min_hsv_publisher.set([min_hue, min_sat, min_val])
-    max_hsv_publisher.set([max_hue, max_sat, max_val])
+    hsv_nt.put('min hsv', [min_hue, min_sat, min_val])
+    hsv_nt.put('max hsv', [max_hue, max_sat, max_val])
 
     # Wait for NetworkTables to start
     time.sleep(0.5)
@@ -57,8 +55,8 @@ def main():
 
         # Convert to HSV and threshold image
         hsv_img = cv2.cvtColor(input_img, cv2.COLOR_BGR2HSV)
-        min_hue, min_sat, min_val = min_hsv_publisher.getEntry()
-        max_hue, max_sat, max_val = max_hsv_publisher.getEntry()
+        min_hue, min_sat, min_val = hsv_nt.get('min hsv')
+        max_hue, max_sat, max_val = hsv_nt.get('max hsv')
         binary_img = cv2.inRange(hsv_img, (min_hue, min_sat, min_val), (max_hue, max_sat, max_val))
         _, contour_list = cv2.findContours(binary_img, mode=cv2.RETR_EXTERNAL, method=cv2.CHAIN_APPROX_SIMPLE)
         x_list = []
