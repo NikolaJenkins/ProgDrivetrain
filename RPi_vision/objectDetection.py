@@ -21,13 +21,14 @@ def main():
         nt_instance.startClient4("visionPi")
 
     CameraServer.startAutomaticCapture()
-    input_stream = CameraServer.getVideo()
+    CameraServer.enableLogging()
+    cv_sink = CameraServer.getVideo()
     output_stream = CameraServer.putVideo('Processed', width, height)
     vision_nt = nt_instance.getTable('Vision')
     img = np.zeros(shape=(240, 320, 3), dtype=np.uint8)
 
     while True:
-        time, input_image = input_stream.grabFrame(img)
-        output_stream.putFrame(output_stream)
+        time, input_image = cv_sink.grabFrame(img)
+        output_stream.putFrame(img)
 
 main()
