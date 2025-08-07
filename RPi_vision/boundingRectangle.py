@@ -58,7 +58,7 @@ def main():
         min_hue, min_sat, min_val = hsv_nt.getNumberArray('min hsv', [])
         max_hue, max_sat, max_val = hsv_nt.getNumberArray('max hsv', [])
         binary_img = cv2.inRange(hsv_img, (min_hue, min_sat, min_val), (max_hue, max_sat, max_val))
-        _, contour_list, _ = cv2.findContours(binary_img, mode=cv2.RETR_EXTERNAL, method=cv2.CHAIN_APPROX_SIMPLE)
+        contour_list, _ = cv2.findContours(binary_img, mode=cv2.RETR_EXTERNAL, method=cv2.CHAIN_APPROX_SIMPLE)
         x_list = []
         y_list = []
 
