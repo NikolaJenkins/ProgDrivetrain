@@ -7,33 +7,63 @@ import time
 def main():
     with open('/boot/frc.json') as f:
         config = json.load(f)
+
+    # configure camera
     camera = config['cameras'][0]
     width = camera['width']
     height = camera['height']
-    nt = ntcore.NetworkTableInstance.getDefault()
+
+    # set up network tables host
+    is_table_host = False
+    nt_instance = ntcore.NetworkTableInstance.getDefault()
+    if is_table_host:
+        nt_instance.startServer()
+    else:
+        nt_instance.setServerTeam(3636)
+        nt_instance.startClient4("visionPi")
+
+    # set up video stream
     CameraServer.startAutomaticCapture()
     input_stream = CameraServer.getVideo()
     output_stream = CameraServer.putVideo('Processed', width, height)
+
     # Table for vision output information
-    vision_nt = nt.getTable('Vision')
+    vision_nt = nt_instance.getTable('Vision')
+
     # Allocating new images is very expensive, always try to preallocate
     img = np.zeros(shape=(240, 320, 3), dtype=np.uint8)
+
+    # set min, max hsv values
+    min_hue, min_sat, min_val = 0, 0, 0
+    max_hue, max_sat, max_val = 61, 255, 255
+    hsv_nt = nt_instance.getTable('HSV Values')
+    min_hsv_publisher = hsv_nt.getDoubleArrayTopic('min').publish() 
+    max_hsv_publisher = hsv_nt.getDoubleArrayTopic('max').publish()
+    min_hsv_publisher.set([min_hue, min_sat, min_val])
+    max_hsv_publisher.set([max_hue, max_sat, max_val])
+
     # Wait for NetworkTables to start
     time.sleep(0.5)
+
     while True:
         start_time = time.time()
         frame_time, input_img = input_stream.grabFrame(img)
         output_img = np.copy(input_img)
+
         # Notify output of error and skip iteration
         if frame_time == 0:
             output_stream.notifyError(input_stream.getError())
             continue
+
         # Convert to HSV and threshold image
         hsv_img = cv2.cvtColor(input_img, cv2.COLOR_BGR2HSV)
-        binary_img = cv2.inRange(hsv_img, (0, 0, 100), (85, 255, 255))
+        min_hue, min_sat, min_val = min_hsv_publisher.get()
+        max_hue, max_sat, max_val = max_hsv_publisher.get()
+        binary_img = cv2.inRange(hsv_img, (min_hue, min_sat, min_val), (max_hue, max_sat, max_val))
         _, contour_list = cv2.findContours(binary_img, mode=cv2.RETR_EXTERNAL, method=cv2.CHAIN_APPROX_SIMPLE)
         x_list = []
         y_list = []
+
         for contour in contour_list:
         # Ignore small contours that could be because of noise/bad thresholding
             if cv2.contourArea(contour) < 15:
@@ -47,6 +77,7 @@ def main():
             cv2.circle(output_img, center=center, radius=3, color=(0, 0, 255), thickness=-1)
             x_list.append((center[0] - width / 2) / (width / 2))
             x_list.append((center[1] - width / 2) / (width / 2))
+
         vision_nt.putNumberArray('target_x', x_list)
         vision_nt.putNumberArray('target_y', y_list)
         processing_time = time.time() - start_time
