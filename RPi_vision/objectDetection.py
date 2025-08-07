@@ -4,10 +4,9 @@ import cv2
 import json
 import numpy as np
 import time
-
 def main():
     is_table_host = True
-    
+
     with open('/boot/frc.json') as f:
         config = json.load(f)
     camera = config['cameras'][0]
@@ -26,8 +25,6 @@ def main():
     output_stream = CameraServer.putVideo('Processed', width, height)
     vision_nt = nt_instance.getTable('Vision')
     img = np.zeros(shape=(240, 320, 3), dtype=np.uint8)
-
-    time.sleep(0.5)
 
     while True:
         time, input_image = input_stream.getFrame(img)
