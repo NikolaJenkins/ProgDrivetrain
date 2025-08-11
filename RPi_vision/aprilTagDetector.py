@@ -58,6 +58,7 @@ tagId = aprilTagNT.getIntegerTopic('AprilTag ID').publish()
 tagX = aprilTagNT.getDoubleTopic('TagX').publish()
 tagY = aprilTagNT.getDoubleTopic('TagY').publish()
 tagZ = aprilTagNT.getDoubleTopic('TagZ').publish()
+accuracy = aprilTagNT.getDoubleTopic('Accuracy').publish()
 
 # create mats
 rgbMat = np.zeros(shape = (xResolution, yResolution, 3), dtype = np.uint8)
@@ -67,6 +68,7 @@ grayMat = np.zeros(shape = (xResolution, yResolution), dtype = np.uint8)
 while True:
     hasTag = False
     tag = -1
+    score = 0
 
     # grab rgb mat
     time, rgbMat = cvSink.grabFrame(rgbMat)
@@ -89,6 +91,7 @@ while True:
         # compute the transform from the Camera to the Tag
         cameraToTag = poseEstimator.estimate(detections[0])
         tag = detections[0].getId()
+        score = detections[0].getDecisionMargin()
     else:  
         # no tags found, so just store an empty transform
         cameraToTag = wpimath.geometry.Transform3d()    
@@ -99,6 +102,7 @@ while True:
     tagX.set(cameraToTag.x)
     tagY.set(cameraToTag.y)
     tagZ.set(cameraToTag.z)
+    accuracy.set(score)
 
     # upload frame to network tables
     outputStream.putFrame(rgbMat)
