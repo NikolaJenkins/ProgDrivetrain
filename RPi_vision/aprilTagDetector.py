@@ -40,6 +40,20 @@ outputStream = CameraServer.putVideo("Vision", xResolution, yResolution)
 aprilTagDetector = robotpy_apriltag.AprilTagDetector()
 aprilTagDetector.addFamily("tag16h5", 3)
 
+# create the PoseEstimator configuration
+poseEstimatorConfig = robotpy_apriltag.AprilTagPoseEstimator.Config(
+    0.1651,             #tag size in meters
+    269.72,  #Fx: x focal length in mm
+    269.04,  #Fy: y focal length in mm
+    175.09,  #Cx: x focal center (based on 320x240 resolution)
+    110.03, #Cy: y focal center (based on 320x240 resolution)
+)
+# create the PoseEstimator
+poseEstimator = robotpy_apriltag.AprilTagPoseEstimator(poseEstimatorConfig)
+
+# create network table for apriltag values
+aprilTagNT = ntInstance.getTable('April Tag')
+
 # create mats
 rgbMat = np.zeros(shape = (xResolution, yResolution, 3), dtype = np.uint8)
 grayMat = np.zeros(shape = (xResolution, yResolution), dtype = np.uint8)
@@ -60,6 +74,22 @@ while True:
             pt1 = (int(detection.getCorner(i).x), int(detection.getCorner(i).y))
             pt2 = (int(detection.getCorner(j).x), int(detection.getCorner(j).y))
             rgbMat = cv2.line(rgbMat, pt1, pt2, lineColor, 2)
+
+    if detections != []:
+        # compute the transform from the Camera to the Tag
+        cameraToTag = poseEstimator.estimate(detections[0])
+        tagId = detections[0].getId()
+        aprilTagNT.putBoolean('April Tag Detected', True)
+    else:  
+        # no tags found, so just store an empty transform
+        cameraToTag = wpimath.geometry.Transform3d()
+        tagId = 0
+        aprilTagNT.putBoolean('April Tag Detected', False)
+    aprilTagNT.putInt('Tag ID', tagId)
+    aprilTagNT.putNumber('TagX', cameraToTag.translation.x)
+    aprilTagNT.putNumber('TagY', cameraToTag.translation.y)
+    aprilTagNT.putNumber('TagZ', cameraToTag.translation.z)
+
 
     # upload frame to network tables
     outputStream.putFrame(rgbMat)
