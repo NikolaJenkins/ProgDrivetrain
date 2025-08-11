@@ -85,7 +85,7 @@ while True:
         cameraToTag = wpimath.geometry.Transform3d()
         tagId = 0
         aprilTagNT.putBoolean('April Tag Detected', False)
-    aprilTagNT.putInt('Tag ID', tagId)
+    aprilTagNT.putNumber('Tag ID', tagId)
     aprilTagNT.putNumber('TagX', cameraToTag.translation.x)
     aprilTagNT.putNumber('TagY', cameraToTag.translation.y)
     aprilTagNT.putNumber('TagZ', cameraToTag.translation.z)
