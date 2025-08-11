@@ -12,7 +12,7 @@ frameRate = 30
 lineColor = (0, 255, 0)
 
 # host - raspberry pi? roborio?
-isTableHost = False
+isTableHost = True
 
 # start up NetworkTables as a server
 ntInstance = ntcore.NetworkTableInstance.getDefault()
