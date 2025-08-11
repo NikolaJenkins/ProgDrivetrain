@@ -86,9 +86,9 @@ while True:
         tagId = 0
         aprilTagNT.putBoolean('April Tag Detected', False)
     aprilTagNT.putNumber('Tag ID', tagId)
-    aprilTagNT.putNumber('TagX', cameraToTag.translation.x)
-    aprilTagNT.putNumber('TagY', cameraToTag.translation.y)
-    aprilTagNT.putNumber('TagZ', cameraToTag.translation.z)
+    aprilTagNT.putNumber('TagX', detections[0].translation.x)
+    aprilTagNT.putNumber('TagY', detections[0].translation.y)
+    aprilTagNT.putNumber('TagZ', detections[0].translation.z)
 
 
     # upload frame to network tables
