@@ -53,12 +53,20 @@ poseEstimator = robotpy_apriltag.AprilTagPoseEstimator(poseEstimatorConfig)
 
 # create network table for apriltag values
 aprilTagNT = ntInstance.getTable('April Tag')
+gotTag = aprilTagNT.getBooleanTopic('AprilTag Present?').publish()
+tagId = aprilTagNT.getIntegerTopic('AprilTag ID').publish()
+tagX = aprilTagNT.getDoubleTopic('TagX').publish()
+tagY = aprilTagNT.getDoubleTopic('TagY').publish()
+tagZ = aprilTagNT.getDoubleTopic('TagZ').publish()
 
 # create mats
 rgbMat = np.zeros(shape = (xResolution, yResolution, 3), dtype = np.uint8)
 grayMat = np.zeros(shape = (xResolution, yResolution), dtype = np.uint8)
 
+# main loop
 while True:
+    hasTag = False
+
     # grab rgb mat
     time, rgbMat = cvSink.grabFrame(rgbMat)
 
@@ -74,22 +82,23 @@ while True:
             pt1 = (int(detection.getCorner(i).x), int(detection.getCorner(i).y))
             pt2 = (int(detection.getCorner(j).x), int(detection.getCorner(j).y))
             rgbMat = cv2.line(rgbMat, pt1, pt2, lineColor, 2)
+        hasTag = True
 
-    if detections != []:
+    if hasTag:
         # compute the transform from the Camera to the Tag
         cameraToTag = poseEstimator.estimate(detections[0])
         tagId = detections[0].getId()
-        aprilTagNT.putBoolean('April Tag Detected', True)
     else:  
         # no tags found, so just store an empty transform
         cameraToTag = wpimath.geometry.Transform3d()
-        tagId = 0
-        aprilTagNT.putBoolean('April Tag Detected', False)
-    aprilTagNT.putNumber('Tag ID', tagId)
-    aprilTagNT.putNumber('TagX', detections[0].translation.x)
-    aprilTagNT.putNumber('TagY', detections[0].translation.y)
-    aprilTagNT.putNumber('TagZ', detections[0].translation.z)
+        tagId = 0    
 
+    # upload values to network tables
+    gotTag.set(hasTag)
+    tagId.set(tagId)
+    tagX.set(cameraToTag.x)
+    tagY.set(cameraToTag.y)
+    tagZ.set(cameraToTag.z)
 
     # upload frame to network tables
     outputStream.putFrame(rgbMat)
