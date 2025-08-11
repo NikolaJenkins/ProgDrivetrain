@@ -66,6 +66,7 @@ grayMat = np.zeros(shape = (xResolution, yResolution), dtype = np.uint8)
 # main loop
 while True:
     hasTag = False
+    tagId = -1
 
     # grab rgb mat
     time, rgbMat = cvSink.grabFrame(rgbMat)
@@ -90,8 +91,7 @@ while True:
         tagId = detections[0].getId()
     else:  
         # no tags found, so just store an empty transform
-        cameraToTag = wpimath.geometry.Transform3d()
-        tagId = 0    
+        cameraToTag = wpimath.geometry.Transform3d()    
 
     # upload values to network tables
     gotTag.set(hasTag)
