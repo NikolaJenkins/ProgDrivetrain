@@ -6,8 +6,8 @@ import numpy as np
 import cv2
 
 # camera settings
-xResolution = 640
-yResolution = 480
+xResolution = 320
+yResolution = 240
 frameRate = 30
 lineColor = (0, 255, 0)
 
