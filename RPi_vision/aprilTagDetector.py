@@ -53,6 +53,7 @@ poseEstimator = robotpy_apriltag.AprilTagPoseEstimator(poseEstimatorConfig)
 
 # create network table for apriltag values
 aprilTagNT = ntInstance.getTable('April Tag')
+tagIds = [0, 1, 2, 3, 4, 5]
 gotTag = aprilTagNT.getBooleanTopic('AprilTag Present?').publish()
 tagId = aprilTagNT.getIntegerTopic('AprilTag ID').publish()
 tagX = aprilTagNT.getDoubleTopic('TagX').publish()
@@ -80,6 +81,9 @@ while True:
     detections = aprilTagDetector.detect(grayMat)
 
     for detection in detections:
+        if detection.getId() not in tagIds:
+            continue
+        
         for i in range(4):
             j = (i + 1) % 4
             pt1 = (int(detection.getCorner(i).x), int(detection.getCorner(i).y))
