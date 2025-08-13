@@ -51,14 +51,14 @@ def main():
         nt_instance.setServerTeam(3636)
         nt_instance.startClient4("visionPi")
 
+    # vision table
+    vision_nt = nt_instance.getTable('Vision')
+
     # set up camera
     CameraServer.startAutomaticCapture()
     CameraServer.enableLogging()
     cv_sink = CameraServer.getVideo()
-    output_stream = CameraServer.putVideo('Processed', X_RESOLUTION, Y_RESOLUTION)
-
-    # vision table
-    vision_nt = nt_instance.getTable('Vision')
+    output_stream = CameraServer.putVideo('Vision', X_RESOLUTION, Y_RESOLUTION)
 
     img = np.zeros(shape=(X_RESOLUTION, Y_RESOLUTION, 3), dtype=np.uint8)
 
