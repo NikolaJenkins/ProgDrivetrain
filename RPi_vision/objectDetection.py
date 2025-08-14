@@ -65,7 +65,7 @@ def main():
     while True:
         # convert from bgr to hsv
         time, input_image = cv_sink.grabFrame(img)
-        frame_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        frame_hsv = cv2.cvtColor(input_image, cv2.COLOR_BGR2HSV)
         contour = find_largest_object(frame_hsv)
 
         # draw rectangle on stream
@@ -73,7 +73,7 @@ def main():
             rect = cv2.minAreaRect(contour)
             box = cv2.boxPoints(rect)
             box = np.int0(box)
-            cv2.drawContours(img, [box], LINE_COLOR, 2)
+            cv2.drawContours(frame_hsv, [box], LINE_COLOR, 2)
 
         output_stream.putFrame(img)
 
