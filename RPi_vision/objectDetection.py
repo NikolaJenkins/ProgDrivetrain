@@ -53,6 +53,12 @@ def main():
 
     # vision table
     vision_nt = nt_instance.getTable('Vision')
+    vision_nt.putNumber('min hue', 0.0)
+    vision_nt.putNumber('min sat', 0.0)
+    vision_nt.putNumber('min val', 0.0)
+    vision_nt.putNumber('max hue', 180.0)
+    vision_nt.putNumber('max sat', 255.0)
+    vision_nt.putNumber('max sat', 255.0)
 
     # set up camera
     CameraServer.startAutomaticCapture()
@@ -66,6 +72,16 @@ def main():
         # convert from bgr to hsv
         time, img = cv_sink.grabFrame(img)
         frame_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+        # adjust thresholds
+        min_hue = vision_nt.getNumber('min hue', 0.0)
+        min_sat = vision_nt.getNumber('min sat', 0.0)
+        min_val = vision_nt.getNumber('min val', 0.0)
+        max_hue = vision_nt.getNumber('max hue', 0.0)
+        max_sat = vision_nt.getNumber('max sat', 0.0)
+        max_val = vision_nt.getNumber('max val', 0.0)
+
+        # find contour
         contour = find_largest_object(frame_hsv)
 
         # draw rectangle on stream
