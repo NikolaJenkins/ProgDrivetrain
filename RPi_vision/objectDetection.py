@@ -14,14 +14,12 @@ FRAME_RATE = 30
 LINE_COLOR = (0, 255, 0)
 
 # object detection requirements
-MIN_COLOR_THRESHOLD = np.array([3, 80, 80])
-MAX_COLOR_THRESHOLD = np.array([6, 255, 255])
-MIN_CONTOUR_AREA = 400
-CONTOUR_RECT_THRESHOLD = 0.9
+MIN_CONTOUR_AREA = 200
+CONTOUR_RECT_THRESHOLD = 0.8
 
 # finds largest image within image with certain color
-def find_largest_object(hsv_image: np.ndarray) -> np.ndarray:
-    mask = cv2.inRange(hsv_image, MIN_COLOR_THRESHOLD, MAX_COLOR_THRESHOLD)
+def find_largest_object(hsv_image: np.ndarray, min_threshold: np.array, max_threshold: np.array) -> np.ndarray:
+    mask = cv2.inRange(hsv_image, min_threshold, max_threshold)
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     if contours:
         return max(contours, key = cv2.contourArea)
@@ -29,6 +27,7 @@ def find_largest_object(hsv_image: np.ndarray) -> np.ndarray:
 # checks if contour is shaped like object
 def contour_is_coral(contour: np.ndarray) -> bool:
     if cv2.contourArea(contour) < MIN_CONTOUR_AREA:
+        print('too small contour area')
         return False
     
     # gets smallest convex polygon that fits around contour
@@ -38,6 +37,7 @@ def contour_is_coral(contour: np.ndarray) -> bool:
     width = rectangle[1][0]
     height = rectangle[1][1]
     area = width * height
+    print('contour match') if cv2.contourArea(contour_hull) / area > CONTOUR_RECT_THRESHOLD else print ('no contour match')
     return cv2.contourArea(contour_hull) / area > CONTOUR_RECT_THRESHOLD
 
 def main():
@@ -80,11 +80,11 @@ def main():
         max_hue = vision_nt.getNumber('max hue', 0.0)
         max_sat = vision_nt.getNumber('max sat', 0.0)
         max_val = vision_nt.getNumber('max val', 0.0)
-        MIN_COLOR_THRESHOLD = np.array([min_hue, min_sat, min_val])
-        MAX_COLOR_THRESHOLD = np.array([max_hue, max_sat, max_val])
+        min_color_threshold = np.array([min_hue, min_sat, min_val])
+        max_color_threshold = np.array([max_hue, max_sat, max_val])
 
         # find contour
-        contour = find_largest_object(frame_hsv)
+        contour = find_largest_object(frame_hsv, min_color_threshold, max_color_threshold)
 
         # draw rectangle on stream
         if contour is not None and contour_is_coral(contour):
