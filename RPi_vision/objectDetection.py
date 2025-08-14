@@ -80,6 +80,8 @@ def main():
         max_hue = vision_nt.getNumber('max hue', 0.0)
         max_sat = vision_nt.getNumber('max sat', 0.0)
         max_val = vision_nt.getNumber('max val', 0.0)
+        MIN_COLOR_THRESHOLD = np.array([min_hue, min_sat, min_val])
+        MAX_COLOR_THRESHOLD = np.array([max_hue, max_sat, max_val])
 
         # find contour
         contour = find_largest_object(frame_hsv)
