@@ -58,7 +58,7 @@ def main():
     vision_nt.putNumber('min val', 0.0)
     vision_nt.putNumber('max hue', 180.0)
     vision_nt.putNumber('max sat', 255.0)
-    vision_nt.putNumber('max sat', 255.0)
+    vision_nt.putNumber('max val', 255.0)
 
     # set up camera
     CameraServer.startAutomaticCapture()
