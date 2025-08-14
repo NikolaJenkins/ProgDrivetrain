@@ -89,8 +89,8 @@ def main():
             rect = cv2.minAreaRect(contour)
             box = cv2.boxPoints(rect)
             box = np.int0(box)
-            cv2.drawContours(frame_hsv, [box], LINE_COLOR, 2)
+            cv2.drawContours(img, [box], LINE_COLOR, 2)
 
-        output_stream.putFrame(frame_hsv)
+        output_stream.putFrame(img)
 
 main()
