@@ -91,8 +91,7 @@ def main():
             rect = cv2.minAreaRect(contour)
             box = cv2.boxPoints(rect)
             box = np.int0(box)
-            #FIXME: arguments for cv2.drawContours()
-            cv2.drawContours(img, [box], LINE_COLOR, 2) 
+            cv2.drawContours(img, [box], -1, LINE_COLOR, 2) 
 
         output_stream.putFrame(img)
 
