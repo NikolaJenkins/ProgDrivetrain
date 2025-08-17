@@ -27,7 +27,7 @@ def find_largest_object(hsv_image: np.ndarray, min_threshold: np.array, max_thre
 # checks if contour is shaped like object
 def contour_is_coral(contour: np.ndarray) -> bool:
     if cv2.contourArea(contour) < MIN_CONTOUR_AREA:
-        print('too small contour area')
+        # print('too small contour area')
         return False
     
     # gets smallest convex polygon that fits around contour
@@ -37,7 +37,7 @@ def contour_is_coral(contour: np.ndarray) -> bool:
     width = rectangle[1][0]
     height = rectangle[1][1]
     area = width * height
-    print('contour match') if cv2.contourArea(contour_hull) / area > CONTOUR_RECT_THRESHOLD else print ('no contour match')
+    # print('contour match') if cv2.contourArea(contour_hull) / area > CONTOUR_RECT_THRESHOLD else print ('no contour match')
     return cv2.contourArea(contour_hull) / area > CONTOUR_RECT_THRESHOLD
 
 def main():
