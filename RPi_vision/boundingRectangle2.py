@@ -90,7 +90,7 @@ def main():
         if contour is not None and contour_is_coral(contour):
             rect = cv2.minAreaRect(contour)
             box = cv2.boxPoints(rect)
-            box = np.int0(box)
+            box = np.int8(box)
             cv2.drawContours(img, [box], -1, LINE_COLOR, 2) 
 
         output_stream.putFrame(img)
