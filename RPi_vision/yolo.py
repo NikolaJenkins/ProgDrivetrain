@@ -47,8 +47,8 @@ def main():
 
     while True:
         time, img = cv_sink.grabFrame(img)
-        if not img:
-            continue
+        # if not img:
+        #     continue
         results = yolo.track(img, stream = True)
 
         # get class names
