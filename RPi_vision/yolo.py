@@ -77,7 +77,7 @@ def main():
                     cv2.rectangle(img, (x1, y1), (x2, y2), LINE_COLOR, 2)
 
                     # put class name and confidence on frame
-                    cv2.putText(img, f'{class_name} {box.conf[0]: .2f}', cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
+                    cv2.putText(img, f'{class_name} {box.conf[0]: .2f}', (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
 
         output_stream.putFrame(img)
 
