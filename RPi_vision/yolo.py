@@ -37,7 +37,7 @@ def main():
     vision_nt = nt_instance.getTable("Vision")
 
     # set up camera
-    CameraServer.startAutomaticCamera()
+    CameraServer.startAutomaticCapture()
     CameraServer.enableLogging()
     cv_sink = CameraServer.getVideo()
     output_stream = CameraServer.putVideo("Vision", X_RESOLUTION, Y_RESOLUTION)
